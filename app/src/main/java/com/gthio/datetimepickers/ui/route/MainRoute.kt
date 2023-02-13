@@ -43,8 +43,6 @@ fun MainRoute(
         }
     )
 
-    val timePickerState = rememberTimePickerState(is24Hour = true)
-
     if (showDatePicker) {
         CustomDatePicker(
             onDismissRequest = { showDatePicker = false },
@@ -73,13 +71,11 @@ fun MainRoute(
     if (showTimePicker) {
         CustomTimePicker(
             onDismiss = { showTimePicker = false },
-            confirmButton = {
+            confirmButton = { fields ->
                 Button(
                     onClick = {
                         showTimePicker = false
-                        viewModel.timeSelected(
-                            TimePickerFields(timePickerState.hour, timePickerState.minute)
-                        )
+                        viewModel.timeSelected(fields)
                     }
                 ) {
                     Text(text = "Confirm")
@@ -90,7 +86,7 @@ fun MainRoute(
                     Text(text = "Cancel")
                 }
             },
-            state = timePickerState,
+            fields = selectedTime ?: TimePickerFields(0, 0),
             sizeCategory = sizeCategory,
         )
     }
