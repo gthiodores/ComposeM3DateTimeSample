@@ -8,7 +8,6 @@ import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -88,6 +87,7 @@ fun MainRoute(
             },
             fields = selectedTime ?: TimePickerFields(0, 0),
             sizeCategory = sizeCategory,
+            title = { Text(text = "Input Time") }
         )
     }
 

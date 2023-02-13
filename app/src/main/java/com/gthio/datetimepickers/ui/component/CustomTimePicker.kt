@@ -2,6 +2,7 @@ package com.gthio.datetimepickers.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerColors
@@ -48,6 +50,7 @@ fun CustomTimePicker(
     onDismiss: () -> Unit,
     confirmButton: @Composable (TimePickerFields) -> Unit,
     dismissButton: @Composable () -> Unit,
+    title: @Composable () -> Unit,
     fields: TimePickerFields,
     colors: TimePickerColors = TimePickerDefaults.colors(),
     sizeCategory: SizeCategory,
@@ -67,13 +70,15 @@ fun CustomTimePicker(
                 dialogShape = AlertDialogDefaults.shape,
                 confirmButton = confirmButton,
                 dismissButton = dismissButton,
+                title = title,
             )
             false -> TimePickerDialog(
                 dialogShape = AlertDialogDefaults.shape,
                 confirmButton = confirmButton,
                 dismissButton = dismissButton,
                 fields = fields,
-                colors = colors
+                colors = colors,
+                title = title,
             )
         }
     }
@@ -83,6 +88,7 @@ fun CustomTimePicker(
 @Composable
 private fun TimePickerDialog(
     dialogShape: Shape,
+    title: @Composable () -> Unit,
     confirmButton: @Composable (TimePickerFields) -> Unit,
     dismissButton: @Composable () -> Unit,
     fields: TimePickerFields,
@@ -99,10 +105,18 @@ private fun TimePickerDialog(
             .background(MaterialTheme.colorScheme.background, shape = dialogShape)
             .clip(dialogShape)
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.Start,
     ) {
-        TimePicker(state = state, colors = colors)
+        ProvideTextStyle(value = MaterialTheme.typography.titleLarge) {
+            title()
+        }
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            TimePicker(state = state, colors = colors)
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
@@ -117,6 +131,7 @@ private fun TimePickerDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimePickerTextField(
+    title: @Composable () -> Unit,
     confirmButton: @Composable (TimePickerFields) -> Unit,
     dismissButton: @Composable () -> Unit,
     fields: TimePickerFields,
@@ -176,7 +191,9 @@ private fun TimePickerTextField(
         verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.Start,
     ) {
-        Text(text = "Input Time", style = MaterialTheme.typography.titleLarge)
+        ProvideTextStyle(value = MaterialTheme.typography.titleLarge) {
+            title()
+        }
 
         OutlinedTextField(
             value = customState,
